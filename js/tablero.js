@@ -283,17 +283,19 @@ export class Tablero {
        }    
 }
     specialMovePank(move,i,j,pieza){
-        if (pieza.getNombrePieza() === 'Pank'){
+        if (move[2].getNombrePieza() === 'Pank'){
+            
             let color = this.getPieza(move[0],move[1]).getColor();
             if (move[0] === 1 && i === 3 || move[0] === 6 && i === 4) {//si es paso doble
                     this.setFlagPeonPaso(i,j,true);
-        
             }
             else if (move[0] === 4 && j !== move[1] && pieza === null) {//si comio al paso y es blanca
                 this.setPieza(i-1,j,null); UICtrl.delete(i-1,j);
+                console.log('entre')
             }
             else if (move[0] === 3 && (j !== move[1] && pieza === null)){//si comio al paso y es negra
                 this.setPieza(i+1,j,null); UICtrl.delete(i+1,j);
+                console.log('entre')
             }
         }    
     }   

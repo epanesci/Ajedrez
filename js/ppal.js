@@ -56,7 +56,7 @@ const controller = () => {
                }
                else if (table.moveValid(move[0],move[1],i,j)) {
                      table.setFlagPeonPaso(0,0,false);
-                     table.specialMovePank(move,i,j,move[2]);
+                     table.specialMovePank(move,i,j,pieza);
                      table.moverPieza(move[0],move[1],i,j,move[2]);
                      table.changePlayer();
                }
