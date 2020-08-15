@@ -70,10 +70,10 @@ export class Bishop extends Pieza {
       return (i1 + j1) === (i2 + j2) || (i1 - j1) === (i2 - j2);
    }
 }
-export class Knigth extends Pieza {
+export class Knight extends Pieza {
    constructor(color){
       super(color);
-      this.tipo = 'Knigth'
+      this.tipo = 'Knight'
    }
    moveValid(i1,j1,i2,j2) {
       let op1 = (Math.abs(i1-i2) === 1) && (Math.abs(j1-j2) === 2)

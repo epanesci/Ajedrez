@@ -1,11 +1,11 @@
-import {Pieza,King,Queen,Rook,Bishop,Knigth,Pawn} from './piezas.js';
+import {Pieza,King,Queen,Rook,Bishop,Knight,Pawn} from './piezas.js';
 import {Tablero} from './tablero.js';
 const UIController = () => {
    return {
+     
       move: (i1,j1,i2,j2) => {
          let origen = document.getElementById(i1.toString()+j1.toString());
          let aux = origen.innerHTML;
-         console.log(aux);
          origen.innerHTML = '';
          document.getElementById(i2.toString()+j2.toString()).innerHTML = aux;
       },
@@ -17,7 +17,7 @@ const UIController = () => {
                case 'Queen': aux = '<img src="img/white-queen.png" alt="Q">';break;
                case 'Rook': aux = '<img src="img/white-rook.png" alt="R">';break;
                case 'Bishop': aux = '<img src="img/white-bishop.png" alt="B">';break;
-               case 'Knigth': aux = '<img src="img/white-knigth.png" alt="N">';break;
+               case 'Knight': aux = '<img src="img/white-Knight.png" alt="N">';break;
             }
 
          }
@@ -26,7 +26,7 @@ const UIController = () => {
                case 'Queen': aux = '<img src="img/black-queen.png" alt="Q">';break;
                case 'Rook': aux = '<img src="img/black-rook.png" alt="R">';break;
                case 'Bishop': aux = '<img src="img/black-bishop.png" alt="B">';break;
-               case 'Knigth': aux = '<img src="img/black-knigth.png" alt="N">';break;
+               case 'Knight': aux = '<img src="img/black-Knight.png" alt="N">';break;
             }
          }
          console.log(aux);
@@ -36,6 +36,9 @@ const UIController = () => {
       },
       delete: (i,j) => {
          document.getElementById(i.toString()+j.toString()).innerHTML = '';
+      },
+      actPng: (listOfMoves) => {
+         document.getElementById('containerPNG').innerHTML = listOfMoves;
       }
    }
 }

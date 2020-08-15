@@ -12,6 +12,16 @@ img {
    width: 100%;
    height: 100%;
 }
+.container{
+   overflow: hidden;
+}
+.png {
+   float: left;
+   background-color: rgb(162, 168, 175);
+   width: 30%; 
+   height: 300px;
+   margin: 60px;
+}
 .casilla {
     float: left;
     width: 69px;
@@ -27,11 +37,7 @@ img {
    overflow: hidden;
 }
 .table {
-   position: relative;
-   left:28%;
-   right:25%;
-   top:30px;
-   align-items: center;
+   float: left;
 }
 .fondo{
    width: 100%;
