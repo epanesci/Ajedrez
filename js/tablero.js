@@ -226,6 +226,7 @@ export class Tablero {
                 UICtrl.move(0,7,0,5);
                 this.setPieza(0,7,null); UICtrl.delete(0,7);
                 enroque = true;
+                this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
              }
              else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
                 this.setPieza(0,2,this.getPieza(0,4));
@@ -236,6 +237,7 @@ export class Tablero {
                 UICtrl.move(0,0,0,3);
                 this.setPieza(0,0,null); UICtrl.delete(0,0);
                 enroque = true;
+                this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
              }
           }
           else if (i1 === 7 && j1 === 4){
@@ -248,6 +250,10 @@ export class Tablero {
                 UICtrl.move(7,7,7,5);
                 this.setPieza(7,7,null); UICtrl.delete(7,7);
                 enroque = true;
+                this.listOfMoves += ' O-O'
+                this.numberMov++;
+                
+                
              }
              else if (j2 === 2  && i2 === 7 && esValidoEnroque(7,4,7,2)){// ENROQUE LARGO NEGRO
                 this.setPieza(7,2,this.getPieza(7,4));
@@ -258,9 +264,12 @@ export class Tablero {
                 UICtrl.move(7,0,7,3);
                 this.setPieza(7,0,null); UICtrl.delete(7,0);
                 enroque = true;
+                this.listOfMoves += 'O-O-O '
+                this.numberMov++;
              }
           }
        }
+       UICtrl.actPng(this.listOfMoves);
        return enroque;
     }
     enListarMov(i1,j1,i2,j2,pieza){
@@ -274,9 +283,9 @@ export class Tablero {
          if (nomPieza != 'Pank') {
             pieceLetter = nomPieza[0];
          }
-        
       }
       
+
       let colMove = '';
       switch (j2){
          case 0: colMove = 'a';break;
@@ -288,31 +297,60 @@ export class Tablero {
          case 6: colMove = 'g';break;
          case 7: colMove = 'h';break;
       }
+
+
+
+
+
+
       let eat = '';
-      if (this.getPieza(i2,j2) != null) {
+      if (this.getPieza(i2,j2) != null) {   
          if (nomPieza === 'Pank'){
             switch (j1){
-               case 0: eat = 'a';break;
-               case 1: eat = 'b';break;
-               case 2: eat = 'c';break;
-               case 3: eat = 'd';break;
-               case 4: eat = 'e';break;
-               case 5: eat = 'f';break;
-               case 6: eat = 'g';break;
-               case 7: eat = 'h';break;
-            }
+                  case 0: eat = 'a';break;
+                  case 1: eat = 'b';break;
+                  case 2: eat = 'c';break;
+                  case 3: eat = 'd';break;
+                  case 4: eat = 'e';break;
+                  case 5: eat = 'f';break;
+                  case 6: eat = 'g';break;
+                  case 7: eat = 'h';break;
+               }
          }
          eat += 'x';
-      } 
-      if (pieza.getColor() != 'Black'){
-         this.listOfMoves += `${this.numberMov}. ${pieceLetter}${eat}${colMove}${i2+1} `;
       }
       else {
-         this.listOfMoves += `${pieceLetter}${eat}${colMove}${i2+1} `;
+         if (nomPieza === 'Pank' && j1 != j2){
+            switch (j1){
+                  case 0: eat = 'a';break;
+                  case 1: eat = 'b';break;
+                  case 2: eat = 'c';break;
+                  case 3: eat = 'd';break;
+                  case 4: eat = 'e';break;
+                  case 5: eat = 'f';break;
+                  case 6: eat = 'g';break;
+                  case 7: eat = 'h';break;
+               }
+            eat += 'x';
+         }
+      }
+
+
+
+
+
+
+
+      if (pieza.getColor() != 'Black'){
+         this.listOfMoves += ` ${this.numberMov}. ${pieceLetter}${eat}${colMove}${i2+1}`;
+      }
+      else {
+         this.listOfMoves += ` ${pieceLetter}${eat}${colMove}${i2+1}`;
       }
       
       UICtrl.actPng(this.listOfMoves);
-    }
+    
+   }
     moverPieza(i1,j1,i2,j2,pieza){
        if (pieza.getNombrePieza() === 'King'){
           if (pieza.getColor() === 'White') {
@@ -348,7 +386,6 @@ export class Tablero {
             }
             else if (move[0] === 4 && j !== move[1] && pieza === null) {//si comio al paso y es blanca
                 this.setPieza(i-1,j,null); UICtrl.delete(i-1,j);
-                
             }
             else if (move[0] === 3 && (j !== move[1] && pieza === null)){//si comio al paso y es negra
                 this.setPieza(i+1,j,null); UICtrl.delete(i+1,j);
@@ -360,17 +397,26 @@ export class Tablero {
         let pieza = prompt();
         switch (pieza) {
             case 'Rook': 
-                    this.table[i][j] = new Rook(color);break;
+                    this.table[i][j] = new Rook(color);
+                    this.listOfMoves += '=R';
+                    break;
             case 'Bishop': 
-                    this.table[i][j] = new Bishop(color);break;
+                    this.table[i][j] = new Bishop(color);
+                    this.listOfMoves += '=B';
+                    break;
             case 'Knight': 
-                    this.table[i][j] = new Knight(color);break;
+                    this.table[i][j] = new Knight(color);
+                    this.listOfMoves += '=N';
+                    break;
             default: 
                     this.table[i][j] = new Queen(color);
-                    pieza = 'Queen';break;
+                    pieza = 'Queen';
+                    this.listOfMoves += '=Q';
+                    break;
 
         }
         UICtrl.set(i,j,color,pieza);
+        UICtrl.actPng(this.listOfMoves);
   
      }
     getPieza(i,j){
