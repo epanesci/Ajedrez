@@ -63,7 +63,6 @@ const controller = () => {
                     
                         let tableAux = new Tablero();
                         tableAux.cloneTable(table);
-                        tableAux.specialMovePank(tableAux.move,i,j,pieza);
                         tableAux.moverPiezaAux(tableAux.move[0],tableAux.move[1],i,j,tableAux.move[2]);
                        
                         if (!tableAux.hayJaque(tableAux.activePlayer)){
