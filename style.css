@@ -38,6 +38,7 @@ img {
 }
 .table {
    float: left;
+   margin-top: 20px;
 }
 .fondo{
    width: 100%;

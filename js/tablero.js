@@ -15,6 +15,24 @@ export class Tablero {
           }
        }
     }
+    cloneTable(tableOrig){
+      for (var i = 0; i < 8; i++) {
+         for (var j = 0; j < 8; j++) {
+            if (tableOrig.table[i][j] === null){
+               this.table[i][j]  = null;
+            }
+            else {
+               this.table[i][j] = tableOrig.table[i][j];
+            }
+         }
+      }
+      this.move = [tableOrig.move[0],tableOrig.move[1],tableOrig.move[2]];
+      this.activePlayer = tableOrig.activePlayer;
+      this.flagPeonPaso = [tableOrig.flagPeonPaso[0],tableOrig.flagPeonPaso[1],tableOrig.flagPeonPaso[2]];
+      this.moveKings = [tableOrig.moveKings[0],tableOrig.moveKings[1]];
+      this.numberMov = tableOrig.numberMov;
+      this.listOfMoves = tableOrig.listOfMoves;
+    }
     initTable(){
        //Fila piezas Blancas
        this.table[0][0] = new Rook('White');
@@ -129,17 +147,14 @@ export class Tablero {
        else {
           return (this.getPieza(i1,j1).getColor() === 'Black')
        }
- 
     }
     destinoValido (i1,j1,i2,j2) {// verificar si casilla destino hay pieza de mismo color
- 
+       let isValid = true;
        if (this.table[i2][j2] !== null) {
-          return (this.table[i1][j1].getColor() !== this.table[i2][j2].getColor())
+         isValid = (this.table[i1][j1].getColor() !== this.table[i2][j2].getColor())
        }
-       else {
- 
-          return true;
-       }
+       return isValid;
+      
     }
     movPiezaValido (i1,j1,i2,j2) {
        let hayPiezaContraria = this.hayPiezaContraria(i1,j1,i2,j2);
@@ -203,6 +218,40 @@ export class Tablero {
     }
     moveValid(i1,j1,i2,j2) {
        return this.validarTurno(i1,j1,i2,j2) && this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
+    }
+    hayAtaque(i1,j1,i2,j2){
+      return this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
+    }
+    hayJaque(active){
+         let color = (active === 0) ? 'White' : 'Black';
+         let jaque = false;
+         //localizar rey del color
+         let kingOfColor = [0,0];
+         for (let i = 0; i < 8; i++){
+            for (let j = 0; j < 8; j++){
+              if (this.table[i][j] != null) {
+                 if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
+                     kingOfColor[0] = i;
+                     kingOfColor[1] = j;
+                 }
+              }
+            }
+         }
+         
+         //buscar todas las piezas que no sean del color y verificar q ninguna tenga un moveValid a esa casilla
+         for (let i = 0; i < 8; i++){
+            for (let j = 0; j < 8; j++){
+              if (this.table[i][j] != null){
+                  if (this.table[i][j].getColor() != color){
+                     if (this.hayAtaque(i,j,kingOfColor[0],kingOfColor[1])){
+                        jaque = true;
+                     }    
+                  }        
+              } 
+            }
+         }
+         
+         return jaque;
     }
     enrocar(i1,j1,i2,j2) {
        const esValidoEnroque = (i1,j1,i2,j2) => {
@@ -350,7 +399,7 @@ export class Tablero {
       
       UICtrl.actPng(this.listOfMoves);
     
-   }
+    }
     moverPieza(i1,j1,i2,j2,pieza){
        if (pieza.getNombrePieza() === 'King'){
           if (pieza.getColor() === 'White') {
@@ -376,7 +425,32 @@ export class Tablero {
                 this.coronar(i2,j2,pieza.getColor())
             }
        }    
-}
+    }
+    moverPiezaAux(i1,j1,i2,j2,pieza){
+      if (pieza.getNombrePieza() === 'King'){
+         if (pieza.getColor() === 'White') {
+            this.moveKings[0] = true;
+         }
+         else {
+            this.moveKings[1] = true;
+         }
+      }
+      else if (pieza.getNombrePieza() === 'Rook'){
+         pieza.setMoveRook(true);
+      }
+      
+      this.setPieza(i2,j2,pieza);
+      this.setPieza(i1,j1,null);
+      if (pieza.getColor() === 'Black') {
+           this.numberMov++;
+      }
+      
+      if (pieza.getNombrePieza() === 'Pank'){ //si hay coronacion
+           if (i2 === 7 || i2 === 0) {
+               this.coronar(i2,j2,pieza.getColor())
+           }
+      }    
+   }
     specialMovePank(move,i,j,pieza){
         if (move[2].getNombrePieza() === 'Pank'){
             
@@ -418,7 +492,7 @@ export class Tablero {
         UICtrl.set(i,j,color,pieza);
         UICtrl.actPng(this.listOfMoves);
   
-     }
+    }
     getPieza(i,j){
        return this.table[i][j];
     }

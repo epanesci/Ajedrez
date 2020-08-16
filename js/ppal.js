@@ -44,6 +44,7 @@ const UIController = () => {
 }
 const controller = () => {
    const jugar = (i,j) => {
+         
          let pieza = table.getPieza(i,j);
          let move = table.getMove();
          if (move[2] === null) {// primer click
@@ -52,19 +53,31 @@ const controller = () => {
             }
          }
          else { //segundo click
+              
                let enro = table.enrocar(move[0],move[1],i,j);
                if (enro) {
                      table.setFlagPeonPaso(0,0,false);
                      table.changePlayer();
                }
                else if (table.moveValid(move[0],move[1],i,j)) {
-                     table.setFlagPeonPaso(0,0,false);
-                     table.specialMovePank(move,i,j,pieza);
-                     table.moverPieza(move[0],move[1],i,j,move[2]);
-                     table.changePlayer();
+                    
+                        let tableAux = new Tablero();
+                        tableAux.cloneTable(table);
+                        tableAux.specialMovePank(tableAux.move,i,j,pieza);
+                        tableAux.moverPiezaAux(tableAux.move[0],tableAux.move[1],i,j,tableAux.move[2]);
+                       
+                        if (!tableAux.hayJaque(tableAux.activePlayer)){
+                           table.setFlagPeonPaso(0,0,false);
+                           table.specialMovePank(move,i,j,pieza);
+                           table.moverPieza(move[0],move[1],i,j,move[2]);
+                           table.changePlayer();  
+                           if (table.hayJaque(table.activePlayer)){
+                              alert('Jaque');
+                           }     
+                        }    
                }
                table.setMove(0,0,null);
-         }
+            }
    }
    const setupEventListener = () => {
       let casillas  = document.querySelectorAll('.casilla');
