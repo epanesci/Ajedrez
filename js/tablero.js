@@ -237,7 +237,8 @@ export class Tablero {
               }
             }
          }
-         
+         console.log(color);
+         console.log(kingOfColor);
          //buscar todas las piezas que no sean del color y verificar q ninguna tenga un moveValid a esa casilla
          for (let i = 0; i < 8; i++){
             for (let j = 0; j < 8; j++){
@@ -250,7 +251,7 @@ export class Tablero {
               } 
             }
          }
-         
+         console.log(jaque);
          return jaque;
     }
     enrocar(i1,j1,i2,j2) {
@@ -262,7 +263,7 @@ export class Tablero {
  
           return esValMove && !moveKing ;
        }
- 
+      
        let enroque = false;
        if (this.getPieza(i1,j1).getNombrePieza() === 'King'){
           if (i1 === 0 && j1 === 4) {
@@ -276,6 +277,7 @@ export class Tablero {
                 this.setPieza(0,7,null); UICtrl.delete(0,7);
                 enroque = true;
                 this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+                
              }
              else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
                 this.setPieza(0,2,this.getPieza(0,4));
@@ -290,8 +292,10 @@ export class Tablero {
              }
           }
           else if (i1 === 7 && j1 === 4){
+             
              if (j2 === 6 && i2 === 7 && esValidoEnroque(7,4,7,6)){// ENROQUE CORTO NEGRO
-                this.setPieza(0,6,this.getPieza(7,4));
+               
+               this.setPieza(7,6,this.getPieza(7,4));
                 UICtrl.move(7,4,7,6);
                 this.setPieza(7,4,null); UICtrl.delete(7,4);
  
@@ -300,8 +304,7 @@ export class Tablero {
                 this.setPieza(7,7,null); UICtrl.delete(7,7);
                 enroque = true;
                 this.listOfMoves += ' O-O'
-                this.numberMov++;
-                
+                this.numberMov++; 
                 
              }
              else if (j2 === 2  && i2 === 7 && esValidoEnroque(7,4,7,2)){// ENROQUE LARGO NEGRO
@@ -313,7 +316,7 @@ export class Tablero {
                 UICtrl.move(7,0,7,3);
                 this.setPieza(7,0,null); UICtrl.delete(7,0);
                 enroque = true;
-                this.listOfMoves += 'O-O-O '
+                this.listOfMoves += ' O-O-O '
                 this.numberMov++;
              }
           }
@@ -321,6 +324,70 @@ export class Tablero {
        UICtrl.actPng(this.listOfMoves);
        return enroque;
     }
+    enrocarAux(i1,j1,i2,j2) {
+      const esValidoEnroque = (i1,j1,i2,j2) => {
+         let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
+         let moveKing = true;
+         if (i1 === 0){ moveKing = this.moveKings[0] }
+         else if (i1 === 7) { moveKing = this.moveKings[1] }
+
+         return esValMove && !moveKing ;
+      }
+
+      let enroque = false;
+      if (this.getPieza(i1,j1).getNombrePieza() === 'King'){
+         if (i1 === 0 && j1 === 4) {
+            if (j2 === 6 && i2 === 0 && esValidoEnroque(0,4,0,6)){// ENROQUE CORTO BLANCO
+               this.setPieza(0,6,this.getPieza(0,4));
+               this.setPieza(0,4,null); 
+
+               this.setPieza(0,5,this.getPieza(0,7));
+               
+               this.setPieza(0,7,null); 
+               enroque = true;
+               this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+            }
+            else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
+               this.setPieza(0,2,this.getPieza(0,4));
+               this.setPieza(0,4,null); 
+               this.setPieza(0,3,this.getPieza(0,0));
+              
+               this.setPieza(0,0,null); 
+               enroque = true;
+               this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
+            }
+         }
+         else if (i1 === 7 && j1 === 4){
+            if (j2 === 6 && i2 === 7 && esValidoEnroque(7,4,7,6)){// ENROQUE CORTO NEGRO
+               this.setPieza(7,6,this.getPieza(7,4));
+              
+               this.setPieza(7,4,null); 
+
+               this.setPieza(7,5,this.getPieza(7,7));
+              
+               this.setPieza(7,7,null); 
+               enroque = true;
+               this.listOfMoves += ' O-O'
+               this.numberMov++; 
+              
+            }
+            else if (j2 === 2  && i2 === 7 && esValidoEnroque(7,4,7,2)){// ENROQUE LARGO NEGRO
+               this.setPieza(7,2,this.getPieza(7,4));
+               
+               this.setPieza(7,4,null); 
+
+               this.setPieza(7,3,this.getPieza(7,0));
+               
+               this.setPieza(7,0,null); 
+               enroque = true;
+               this.listOfMoves += ' O-O-O '
+               this.numberMov++;
+            }
+         }
+      }
+      
+      return enroque;
+   }
     enListarMov(i1,j1,i2,j2,pieza){
       
       let nomPieza = pieza.getNombrePieza();

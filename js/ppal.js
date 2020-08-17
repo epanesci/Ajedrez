@@ -53,18 +53,21 @@ const controller = () => {
             }
          }
          else { //segundo click
-              
-               let enro = table.enrocar(move[0],move[1],i,j);
+               let tableAux = new Tablero();
+               tableAux.cloneTable(table);
+               let enro = tableAux.enrocarAux(tableAux.move[0],tableAux.move[1],i,j);
+               
                if (enro) {
+                 
+                  if (!tableAux.hayJaque(tableAux.activePlayer)){
+                   
+                     table.enrocar(table.move[0],table.move[1],i,j);
                      table.setFlagPeonPaso(0,0,false);
                      table.changePlayer();
+                  }
                }
-               else if (table.moveValid(move[0],move[1],i,j)) {
-                    
-                        let tableAux = new Tablero();
-                        tableAux.cloneTable(table);
+               else if (table.moveValid(move[0],move[1],i,j)) { 
                         tableAux.moverPiezaAux(tableAux.move[0],tableAux.move[1],i,j,tableAux.move[2]);
-                       
                         if (!tableAux.hayJaque(tableAux.activePlayer)){
                            table.setFlagPeonPaso(0,0,false);
                            table.specialMovePank(move,i,j,pieza);
