@@ -67,6 +67,7 @@ const controller = () => {
                   }
                }
                else if (table.moveValid(move[0],move[1],i,j)) { 
+                        console.log('mov valid');
                         tableAux.moverPiezaAux(tableAux.move[0],tableAux.move[1],i,j,tableAux.move[2]);
                         if (!tableAux.hayJaque(tableAux.activePlayer)){
                            table.setFlagPeonPaso(0,0,false);

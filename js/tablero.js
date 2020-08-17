@@ -272,33 +272,38 @@ export class Tablero {
        if (this.getPieza(i1,j1).getNombrePieza() === 'King'){
           if (i1 === 0 && j1 === 4) {
              if (j2 === 6 && i2 === 0 && esValidoEnroque(0,4,0,6)){// ENROQUE CORTO BLANCO
-                this.setPieza(0,6,this.getPieza(0,4));
-                UICtrl.move(0,4,0,6);
-                this.setPieza(0,4,null); UICtrl.delete(0,4);
- 
-                this.setPieza(0,5,this.getPieza(0,7));
-                UICtrl.move(0,7,0,5);
-                this.setPieza(0,7,null); UICtrl.delete(0,7);
-                enroque = true;
-                this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+                if (!this.buscarAtaque(0,4,'White') && !this.buscarAtaque(0,5,'White') && !this.buscarAtaque(0,6,'White')){
+                  this.setPieza(0,6,this.getPieza(0,4));
+                  UICtrl.move(0,4,0,6);
+                  this.setPieza(0,4,null); UICtrl.delete(0,4);
+   
+                  this.setPieza(0,5,this.getPieza(0,7));
+                  UICtrl.move(0,7,0,5);
+                  this.setPieza(0,7,null); UICtrl.delete(0,7);
+                  enroque = true;
+                  this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+                }
+                
                 
              }
              else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
-                this.setPieza(0,2,this.getPieza(0,4));
-                UICtrl.move(0,4,0,2);
-                this.setPieza(0,4,null); UICtrl.delete(0,4);
- 
-                this.setPieza(0,3,this.getPieza(0,0));
-                UICtrl.move(0,0,0,3);
-                this.setPieza(0,0,null); UICtrl.delete(0,0);
-                enroque = true;
-                this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
+               if (!this.buscarAtaque(0,2,'White') && !this.buscarAtaque(0,3,'White') && !this.buscarAtaque(0,4,'White')){
+                  this.setPieza(0,2,this.getPieza(0,4));
+                  UICtrl.move(0,4,0,2);
+                  this.setPieza(0,4,null); UICtrl.delete(0,4);
+   
+                  this.setPieza(0,3,this.getPieza(0,0));
+                  UICtrl.move(0,0,0,3);
+                  this.setPieza(0,0,null); UICtrl.delete(0,0);
+                  enroque = true;
+                  this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
+               } 
              }
           }
           else if (i1 === 7 && j1 === 4){
              
              if (j2 === 6 && i2 === 7 && esValidoEnroque(7,4,7,6)){// ENROQUE CORTO NEGRO
-               
+               if (!this.buscarAtaque(7,4,'Black') && !this.buscarAtaque(7,5,'Black') && !this.buscarAtaque(7,6,'Black')){
                this.setPieza(7,6,this.getPieza(7,4));
                 UICtrl.move(7,4,7,6);
                 this.setPieza(7,4,null); UICtrl.delete(7,4);
@@ -309,19 +314,21 @@ export class Tablero {
                 enroque = true;
                 this.listOfMoves += ' O-O'
                 this.numberMov++; 
-                
+               }
              }
              else if (j2 === 2  && i2 === 7 && esValidoEnroque(7,4,7,2)){// ENROQUE LARGO NEGRO
-                this.setPieza(7,2,this.getPieza(7,4));
-                UICtrl.move(7,4,7,2);
-                this.setPieza(7,4,null); UICtrl.delete(7,4);
- 
-                this.setPieza(7,3,this.getPieza(7,0));
-                UICtrl.move(7,0,7,3);
-                this.setPieza(7,0,null); UICtrl.delete(7,0);
-                enroque = true;
-                this.listOfMoves += ' O-O-O '
-                this.numberMov++;
+               if (!this.buscarAtaque(7,2,'Black') && !this.buscarAtaque(7,3,'Black') && !this.buscarAtaque(7,4,'Black')){
+                  this.setPieza(7,2,this.getPieza(7,4));
+                  UICtrl.move(7,4,7,2);
+                  this.setPieza(7,4,null); UICtrl.delete(7,4);
+   
+                  this.setPieza(7,3,this.getPieza(7,0));
+                  UICtrl.move(7,0,7,3);
+                  this.setPieza(7,0,null); UICtrl.delete(7,0);
+                  enroque = true;
+                  this.listOfMoves += ' O-O-O '
+                  this.numberMov++;
+               }
              }
           }
        }
@@ -342,50 +349,57 @@ export class Tablero {
       if (this.getPieza(i1,j1).getNombrePieza() === 'King'){
          if (i1 === 0 && j1 === 4) {
             if (j2 === 6 && i2 === 0 && esValidoEnroque(0,4,0,6)){// ENROQUE CORTO BLANCO
-               this.setPieza(0,6,this.getPieza(0,4));
-               this.setPieza(0,4,null); 
+               if (!this.buscarAtaque(0,4,'White') && !this.buscarAtaque(0,5,'White') && !this.buscarAtaque(0,6,'White')){
+                  this.setPieza(0,6,this.getPieza(0,4));
+                  this.setPieza(0,4,null); 
 
-               this.setPieza(0,5,this.getPieza(0,7));
-               
-               this.setPieza(0,7,null); 
-               enroque = true;
-               this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+                  this.setPieza(0,5,this.getPieza(0,7));
+                  
+                  this.setPieza(0,7,null); 
+                  enroque = true;
+                  this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
+               }
             }
             else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
-               this.setPieza(0,2,this.getPieza(0,4));
-               this.setPieza(0,4,null); 
-               this.setPieza(0,3,this.getPieza(0,0));
-              
-               this.setPieza(0,0,null); 
-               enroque = true;
-               this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
+               if (!this.buscarAtaque(0,2,'White') && !this.buscarAtaque(0,3,'White') && !this.buscarAtaque(0,4,'White')){
+                  this.setPieza(0,2,this.getPieza(0,4));
+                  this.setPieza(0,4,null); 
+                  this.setPieza(0,3,this.getPieza(0,0));
+               
+                  this.setPieza(0,0,null); 
+                  enroque = true;
+                  this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O-O';
+               }   
             }
          }
          else if (i1 === 7 && j1 === 4){
             if (j2 === 6 && i2 === 7 && esValidoEnroque(7,4,7,6)){// ENROQUE CORTO NEGRO
-               this.setPieza(7,6,this.getPieza(7,4));
-              
-               this.setPieza(7,4,null); 
+               if (!this.buscarAtaque(7,4,'Black') && !this.buscarAtaque(7,5,'Black') && !this.buscarAtaque(7,6,'Black')){
+                  this.setPieza(7,6,this.getPieza(7,4));
+               
+                  this.setPieza(7,4,null); 
 
-               this.setPieza(7,5,this.getPieza(7,7));
-              
-               this.setPieza(7,7,null); 
-               enroque = true;
-               this.listOfMoves += ' O-O'
-               this.numberMov++; 
-              
+                  this.setPieza(7,5,this.getPieza(7,7));
+               
+                  this.setPieza(7,7,null); 
+                  enroque = true;
+                  this.listOfMoves += ' O-O'
+                  this.numberMov++; 
+               }
             }
             else if (j2 === 2  && i2 === 7 && esValidoEnroque(7,4,7,2)){// ENROQUE LARGO NEGRO
-               this.setPieza(7,2,this.getPieza(7,4));
-               
-               this.setPieza(7,4,null); 
+               if (!this.buscarAtaque(7,2,'Black') && !this.buscarAtaque(7,3,'Black') && !this.buscarAtaque(7,4,'Black')){
+                  this.setPieza(7,2,this.getPieza(7,4));
+                  
+                  this.setPieza(7,4,null); 
 
-               this.setPieza(7,3,this.getPieza(7,0));
-               
-               this.setPieza(7,0,null); 
-               enroque = true;
-               this.listOfMoves += ' O-O-O '
-               this.numberMov++;
+                  this.setPieza(7,3,this.getPieza(7,0));
+                  
+                  this.setPieza(7,0,null); 
+                  enroque = true;
+                  this.listOfMoves += ' O-O-O '
+                  this.numberMov++;
+               }
             }
          }
       }
