@@ -237,8 +237,7 @@ export class Tablero {
               }
             }
          }
-         console.log(color);
-         console.log(kingOfColor);
+        
          //buscar todas las piezas que no sean del color y verificar q ninguna tenga un moveValid a esa casilla
          for (let i = 0; i < 8; i++){
             for (let j = 0; j < 8; j++){
@@ -251,7 +250,7 @@ export class Tablero {
               } 
             }
          }
-         console.log(jaque);
+        
          return jaque;
     }
     enrocar(i1,j1,i2,j2) {
