@@ -1,6 +1,8 @@
 import {UICtrl} from './ppal.js';
 import {Pieza,King,Queen,Rook,Bishop,Knight,Pawn} from './piezas.js';
 export class Tablero {
+    //Constructors
+
     constructor(){
        this.table = [[],[],[],[],[],[],[],[]];
        this.move = [0,0,null];
@@ -70,6 +72,27 @@ export class Tablero {
        this.table[7][6] = new Knight('Black');
        this.table[7][7] = new Rook('Black');
     }
+
+   //Geters
+   
+    getPieza(i,j){
+      return this.table[i][j];
+    }
+    getMove(){
+      return this.move;
+    }
+    getFlagPeonPaso(){
+      return this.flagPeonPaso;
+   }
+    hayPiezaContraria(i1,j1,i2,j2){
+      let hayPiezaCont = false;
+      if (this.getPieza(i2,j2) !== null){
+         if (this.getPieza(i1,j1).getColor() !== this.getPieza(i2,j2).getColor() ){
+            hayPiezaCont = true;
+         }
+      }
+      return hayPiezaCont
+   }
     mostrarTablero(){
        for (var i = 0; i <= 7; i++) {
           for (var j = 0; j <= 7; j++) {
@@ -241,23 +264,30 @@ export class Tablero {
          let color = (active === 0) ? 'White' : 'Black';
          let jaque = false;
          //localizar rey del color
-         let kingOfColor = [0,0];
-         for (let i = 0; i < 8; i++){
-            for (let j = 0; j < 8; j++){
-              if (this.table[i][j] != null) {
-                 if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
-                     kingOfColor[0] = i;
-                     kingOfColor[1] = j;
-                 }
-              }
-            }
-         }
+         let kingOfColor = this.searchKing(color);
+        
         
          //buscar todas las piezas que no sean del color y verificar q ninguna tenga un moveValid a esa casilla
          jaque = this.buscarAtaque(kingOfColor[0],kingOfColor[1],color)
         
          return jaque;
     }
+    searchKing(color){
+      let positionKing;
+      for (let i = 0; i < 8; i++){
+         for (let j = 0; j < 8; j++){
+           if (this.table[i][j] != null) {
+              if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
+                 positionKing = [i,j]
+              }
+           }
+         }
+      }
+      return positionKing;
+   }
+
+   //Seters
+    
     enrocar(i1,j1,i2,j2) {
        const esValidoEnroque = (i1,j1,i2,j2) => {
           let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
@@ -402,29 +432,16 @@ export class Tablero {
    }
    ponerRojoRey(actPlayer){
       let color = (actPlayer === 0) ? 'White' : 'Black';
-      for (let i = 0; i < 8; i++){
-         for (let j = 0; j < 8; j++){
-           if (this.table[i][j] != null) {
-              if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
-                  UICtrl.set(i,j,color,'KingAtack');
-              }
-           }
-         }
-      }
+      let positionKing = this.searchKing(color);
+      UICtrl.set(positionKing[0],positionKing[1],color,'KingAtack');
    }
+
    sacarRojoRey(actPlayer){
       let color = (actPlayer === 0) ? 'White' : 'Black';
-      for (let i = 0; i < 8; i++){
-         for (let j = 0; j < 8; j++){
-           if (this.table[i][j] != null) {
-              if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
-                  UICtrl.set(i,j,color,'King');
-              }
-           }
-         }
-      }
+      let positionKing = this.searchKing(color);
+      UICtrl.set(positionKing[0],positionKing[1],color,'King');
    }
-    enListarMov(i1,j1,i2,j2,pieza){
+   enListarMov(i1,j1,i2,j2,pieza){
       
       let nomPieza = pieza.getNombrePieza();
       let pieceLetter = '';
@@ -596,33 +613,15 @@ export class Tablero {
         UICtrl.actPng(this.listOfMoves);
   
     }
-    getPieza(i,j){
-       return this.table[i][j];
-    }
     setPieza(i,j,valor){
        this.table[i][j] = valor;
-    }
-    getMove(){
-       return this.move;
     }
     setMove(i,j,valor){
        this.move = [i,j,valor];
     }
-    hayPiezaContraria(i1,j1,i2,j2){
-       let hayPiezaCont = false;
-       if (this.getPieza(i2,j2) !== null){
-          if (this.getPieza(i1,j1).getColor() !== this.getPieza(i2,j2).getColor() ){
-             hayPiezaCont = true;
-          }
-       }
-       return hayPiezaCont
-    }
+    
     changePlayer(){
        this.activePlayer === 0 ? this.activePlayer = 1: this.activePlayer = 0;
-    }
-   
-    getFlagPeonPaso(){
-       return this.flagPeonPaso;
     }
     setFlagPeonPaso(i,j,bool){
        this.flagPeonPaso[0] = i;
