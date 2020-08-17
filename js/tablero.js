@@ -222,6 +222,21 @@ export class Tablero {
     hayAtaque(i1,j1,i2,j2){
       return this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
     }
+    buscarAtaque(i2,j2,color){
+      let atack = false;
+      for (let i = 0; i < 8; i++){
+         for (let j = 0; j < 8; j++){
+           if (this.table[i][j] != null){
+               if (this.table[i][j].getColor() != color){
+                  if (this.hayAtaque(i,j,i2,j2)){
+                     atack = true;
+                  }    
+               }        
+           } 
+         }
+      }
+      return atack;
+    }
     hayJaque(active){
          let color = (active === 0) ? 'White' : 'Black';
          let jaque = false;
@@ -239,17 +254,7 @@ export class Tablero {
          }
         
          //buscar todas las piezas que no sean del color y verificar q ninguna tenga un moveValid a esa casilla
-         for (let i = 0; i < 8; i++){
-            for (let j = 0; j < 8; j++){
-              if (this.table[i][j] != null){
-                  if (this.table[i][j].getColor() != color){
-                     if (this.hayAtaque(i,j,kingOfColor[0],kingOfColor[1])){
-                        jaque = true;
-                     }    
-                  }        
-              } 
-            }
-         }
+         jaque = this.buscarAtaque(kingOfColor[0],kingOfColor[1],color)
         
          return jaque;
     }
