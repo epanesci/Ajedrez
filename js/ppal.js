@@ -11,13 +11,15 @@ const UIController = () => {
       },
       set: (i,j,color,p) => {
          let aux = '';
-         let pepe;
+        
          if (color === 'White'){
             switch (p) {
                case 'Queen': aux = '<img src="img/white-queen.png" alt="Q">';break;
                case 'Rook': aux = '<img src="img/white-rook.png" alt="R">';break;
                case 'Bishop': aux = '<img src="img/white-bishop.png" alt="B">';break;
                case 'Knight': aux = '<img src="img/white-Knight.png" alt="N">';break;
+               case 'King': aux = '<img src="img/white-king.png" alt="N">';break;
+               case 'KingAtack': aux = '<img src="img/white-king-atack.png" alt="N">';break;
             }
 
          }
@@ -27,9 +29,11 @@ const UIController = () => {
                case 'Rook': aux = '<img src="img/black-rook.png" alt="R">';break;
                case 'Bishop': aux = '<img src="img/black-bishop.png" alt="B">';break;
                case 'Knight': aux = '<img src="img/black-Knight.png" alt="N">';break;
+               case 'King': aux = '<img src="img/black-king.png" alt="N">';break;
+               case 'KingAtack': aux = '<img src="img/black-king-atack.png" alt="N">';break;
             }
          }
-         console.log(aux);
+        
          document.getElementById(i.toString()+j.toString()).innerHTML = aux;
          
 
@@ -67,15 +71,18 @@ const controller = () => {
                   }
                }
                else if (table.moveValid(move[0],move[1],i,j)) { 
-                        console.log('mov valid');
                         tableAux.moverPiezaAux(tableAux.move[0],tableAux.move[1],i,j,tableAux.move[2]);
                         if (!tableAux.hayJaque(tableAux.activePlayer)){
                            table.setFlagPeonPaso(0,0,false);
                            table.specialMovePank(move,i,j,pieza);
                            table.moverPieza(move[0],move[1],i,j,move[2]);
+                           table.sacarRojoRey(table.activePlayer);
                            table.changePlayer();  
                            if (table.hayJaque(table.activePlayer)){
-                              alert('Jaque');
+                              table.listOfMoves += '+';
+                              UICtrl.actPng(table.listOfMoves);
+                              table.ponerRojoRey(table.activePlayer);
+                           
                            }     
                         }    
                }

@@ -276,22 +276,18 @@ export class Tablero {
                   this.setPieza(0,6,this.getPieza(0,4));
                   UICtrl.move(0,4,0,6);
                   this.setPieza(0,4,null); UICtrl.delete(0,4);
-   
                   this.setPieza(0,5,this.getPieza(0,7));
                   UICtrl.move(0,7,0,5);
                   this.setPieza(0,7,null); UICtrl.delete(0,7);
                   enroque = true;
                   this.listOfMoves += ' ' + this.numberMov + '. ' + 'O-O';
                 }
-                
-                
              }
              else if (j2 === 2 && i2 === 0 && esValidoEnroque(0,4,0,2)){// ENROQUE LARGO BLANCO
                if (!this.buscarAtaque(0,2,'White') && !this.buscarAtaque(0,3,'White') && !this.buscarAtaque(0,4,'White')){
                   this.setPieza(0,2,this.getPieza(0,4));
                   UICtrl.move(0,4,0,2);
                   this.setPieza(0,4,null); UICtrl.delete(0,4);
-   
                   this.setPieza(0,3,this.getPieza(0,0));
                   UICtrl.move(0,0,0,3);
                   this.setPieza(0,0,null); UICtrl.delete(0,0);
@@ -307,7 +303,6 @@ export class Tablero {
                this.setPieza(7,6,this.getPieza(7,4));
                 UICtrl.move(7,4,7,6);
                 this.setPieza(7,4,null); UICtrl.delete(7,4);
- 
                 this.setPieza(7,5,this.getPieza(7,7));
                 UICtrl.move(7,7,7,5);
                 this.setPieza(7,7,null); UICtrl.delete(7,7);
@@ -321,7 +316,6 @@ export class Tablero {
                   this.setPieza(7,2,this.getPieza(7,4));
                   UICtrl.move(7,4,7,2);
                   this.setPieza(7,4,null); UICtrl.delete(7,4);
-   
                   this.setPieza(7,3,this.getPieza(7,0));
                   UICtrl.move(7,0,7,3);
                   this.setPieza(7,0,null); UICtrl.delete(7,0);
@@ -405,6 +399,30 @@ export class Tablero {
       }
       
       return enroque;
+   }
+   ponerRojoRey(actPlayer){
+      let color = (actPlayer === 0) ? 'White' : 'Black';
+      for (let i = 0; i < 8; i++){
+         for (let j = 0; j < 8; j++){
+           if (this.table[i][j] != null) {
+              if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
+                  UICtrl.set(i,j,color,'KingAtack');
+              }
+           }
+         }
+      }
+   }
+   sacarRojoRey(actPlayer){
+      let color = (actPlayer === 0) ? 'White' : 'Black';
+      for (let i = 0; i < 8; i++){
+         for (let j = 0; j < 8; j++){
+           if (this.table[i][j] != null) {
+              if (this.table[i][j].getNombrePieza() === 'King' && this.table[i][j].getColor() === color){
+                  UICtrl.set(i,j,color,'King');
+              }
+           }
+         }
+      }
    }
     enListarMov(i1,j1,i2,j2,pieza){
       
