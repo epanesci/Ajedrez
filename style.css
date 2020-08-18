@@ -21,7 +21,7 @@ img {
    width: 30%; 
    height: 300px;
    margin: 60px;
-   font-size-adjust: 30px;
+   font-size: x-large;
 }
 .casilla {
     float: left;

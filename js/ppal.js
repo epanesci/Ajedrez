@@ -71,12 +71,12 @@ const controller = () => {
                      table.setFlagPeonPaso(0,0,false);
                      table.specialMovePank(move,i,j,pieza);
                      table.moverPieza(move[0],move[1],i,j,move[2]);
-                     table.sacarRojoRey(table.activePlayer);
+                     table.checkKing(table.activePlayer,false);
                      table.changePlayer();  
                      if (table.hayJaque(table.activePlayer)){ //si el moviemiento probocó un jaque al equipo contrario
                         table.listOfMoves += '+';
                         UICtrl.actPgn(table.listOfMoves);
-                        table.ponerRojoRey(table.activePlayer);
+                        table.checkKing(table.activePlayer,true);
                      }     
                   }    
                }

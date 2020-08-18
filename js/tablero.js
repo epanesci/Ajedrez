@@ -4,28 +4,19 @@ export class Tablero {
     //Constructors
 
    constructor(){
-       this.table = [[],[],[],[],[],[],[],[]];
-       this.move = [0,0,null];
-       this.activePlayer = 0;
-       this.flagPeonPaso = [0,0,false];
-       this.moveKings = [false,false]
-       this.numberMov = 1;
-       this.listOfMoves = '';
-       for (var i = 0; i <= 7; i++) {
-          for (var j = 0; j <= 7; j++) {
-             this.table[i].push(null);
-          }
-       }
+       this.table = [[],[],[],[],[],[],[],[]]; //es una matriz q simula un tablero de ajedrez
+       this.move = [0,0,null];//variable auxiliar para ayudar a hacer verificaciones antes de realizar el movimiento
+       this.activePlayer = 0;//determina el turno (0 si es blancas y 1 si es negras)
+       this.flagPeonPaso = [0,0,false];//es una bandera q se activa cuando es posible comer al paso y guarda q posicion es
+       this.moveKings = [false,false];//sirve para controlar si es rey se movio o no para validar el enroque 
+       this.numberMov = 1; //lleva un contador de lo movimientos de cada jugador para mostrar en el PGN
+       this.listOfMoves = ''; //PGN (listado de movimientos segun anotacion oficial de ajedrez)
+      
    }
-   cloneTable(tableOrig){
+   cloneTable(tableOrig){//clona el tablero para poder hacer una simulacion para no quedar en jaque en la proxima jugada
       for (var i = 0; i < 8; i++) {
          for (var j = 0; j < 8; j++) {
-            if (tableOrig.table[i][j] === null){
-               this.table[i][j]  = null;
-            }
-            else {
                this.table[i][j] = tableOrig.table[i][j];
-            }
          }
       }
       this.move = [tableOrig.move[0],tableOrig.move[1],tableOrig.move[2]];
@@ -35,7 +26,7 @@ export class Tablero {
       this.numberMov = tableOrig.numberMov;
       this.listOfMoves = tableOrig.listOfMoves;
    }
-   initTable(){
+   initTable(){//inicializa el tablero en la formacion tradicional de ajedrez
        //Fila piezas Blancas
        this.table[0][0] = new Rook('White');
        this.table[0][1] = new Knight('White');
@@ -75,7 +66,7 @@ export class Tablero {
 
    //Geters
    
-   getPieza(i,j){
+   getPieza(i,j){//
       return this.table[i][j];
    }
    getMove(){
@@ -92,13 +83,6 @@ export class Tablero {
          }
       }
       return hayPiezaCont
-   }
-   mostrarTablero(){
-       for (var i = 0; i <= 7; i++) {
-          for (var j = 0; j <= 7; j++) {
-             console.log(this.table[i][j]);
-          }
-       }
    }
    getRecorrido(i1,j1,i2,j2) {
        let recorrido = [];
@@ -163,7 +147,7 @@ export class Tablero {
        }
        return recorrido;
    }
-   validarTurno(i1,j1,i2,j2) {
+   validarTurno(i1,j1,i2,j2) {//valida el movimiento en funcion de si es o no su turno
        if (this.activePlayer === 0){
           return (this.getPieza(i1,j1).getColor() === 'White');
        }
@@ -171,7 +155,7 @@ export class Tablero {
           return (this.getPieza(i1,j1).getColor() === 'Black')
        }
    }
-   destinoValido (i1,j1,i2,j2) {// verificar si casilla destino hay pieza de mismo color
+   destinoValido (i1,j1,i2,j2) {// verificar que en la casilla destino no haya una pieza de mismo color
        let isValid = true;
        if (this.table[i2][j2] !== null) {
          isValid = (this.table[i1][j1].getColor() !== this.table[i2][j2].getColor())
@@ -179,12 +163,12 @@ export class Tablero {
        return isValid;
       
    }
-   movPiezaValido (i1,j1,i2,j2) {
+   movPiezaValido (i1,j1,i2,j2) {//verifica si el movimiento es valido para una pieza en particular
        let hayPiezaContraria = this.hayPiezaContraria(i1,j1,i2,j2);
  
        return this.getPieza(i1,j1).moveValid(i1,j1,i2,j2,hayPiezaContraria,this.flagPeonPaso);
    }
-   recorridoValido(i1,j1,i2,j2) {
+   recorridoValido(i1,j1,i2,j2) {//verifica que no haya piezas en el camino para ayudar a verificar si el mov es valido (excepto caballo)
        let valid = true;
        if (this.getPieza(i1,j1).getNombrePieza() !== 'Knight'){
           let reco = this.getRecorrido(i1,j1,i2,j2);
@@ -196,7 +180,7 @@ export class Tablero {
        }
        return valid;
    }
-   recorridoValidoEnro(i1,j1,i2,j2) {
+   recorridoValidoEnro(i1,j1,i2,j2) {//verifica que no haya ninguna pieza entre torre y rey (ayuda a verficar si el enroque es posible)
        let valid = true;
        let fin = 0;
        switch (j2) {
@@ -215,7 +199,7 @@ export class Tablero {
        }
        return valid;
    }
-   torreMovida(i1,j1,i2,j2){
+   torreMovida(i1,j1,i2,j2){//verifica si una torre fue o no movida (para evaluar si es posible un enroque)
        let moveRook = false;
        if (j2 === 6) {
           if (this.getPieza(i1,7).getNombrePieza() === 'Rook'){
@@ -239,10 +223,10 @@ export class Tablero {
        }
        return moveRook;
    }
-   moveValid(i1,j1,i2,j2) {
+   moveValid(i1,j1,i2,j2) {//verifica todos los criterios para determinar si un movimiento "normal" es valido 
        return this.validarTurno(i1,j1,i2,j2) && this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
    }
-   hayAtaque(i1,j1,i2,j2){
+   hayAtaque(i1,j1,i2,j2){//verifica si alguna pieza esta atacando a una casilla en particular
       return this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
    }
    buscarAtaque(i2,j2,color){
@@ -260,7 +244,7 @@ export class Tablero {
       }
       return atack;
    }
-   hayJaque(active){
+   hayJaque(active){//verifica si en la posicion hay o no jaque al rey del jugador activo en ese momento
          let color = (active === 0) ? 'White' : 'Black';
          let jaque = false;
          //localizar rey del color
@@ -272,7 +256,7 @@ export class Tablero {
         
          return jaque;
    }
-   searchKing(color){
+   searchKing(color){//devuelve la posicion del rey de un determinado color
       let positionKing;
       for (let i = 0; i < 8; i++){
          for (let j = 0; j < 8; j++){
@@ -288,7 +272,7 @@ export class Tablero {
 
    //Seters
     
-   enrocar(i1,j1,i2,j2) {
+   enrocar(i1,j1,i2,j2) {//verifica si el movimiento es enroque y lo realiza caso afirmativo
        const esValidoEnroque = (i1,j1,i2,j2) => {
           let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
           let moveKing = true;
@@ -356,10 +340,10 @@ export class Tablero {
              }
           }
        }
-       UICtrl.actPng(this.listOfMoves);
+       UICtrl.actPgn(this.listOfMoves);
        return enroque;
    }
-   enrocarAux(i1,j1,i2,j2) {
+   enrocarAux(i1,j1,i2,j2) {//es una funcion identica a enrocar pero no muestra los cambios en la interfaz
       const esValidoEnroque = (i1,j1,i2,j2) => {
          let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
          let moveKing = true;
@@ -430,19 +414,16 @@ export class Tablero {
       
       return enroque;
    }
-   ponerRojoRey(actPlayer){
+   checkKing(actPlayer,bool){//pone y saca el color rojo del rey cuando hay jaque y cuando ya no hay jaque respectivamente
       let color = (actPlayer === 0) ? 'White' : 'Black';
       let positionKing = this.searchKing(color);
-      UICtrl.set(positionKing[0],positionKing[1],color,'KingAtack');
+      if (bool) { UICtrl.set(positionKing[0],positionKing[1],color,'KingAtack')}
+      else { UICtrl.set(positionKing[0],positionKing[1],color,'King')}
+     
    }
-   sacarRojoRey(actPlayer){
-      let color = (actPlayer === 0) ? 'White' : 'Black';
-      let positionKing = this.searchKing(color);
-      UICtrl.set(positionKing[0],positionKing[1],color,'King');
-   }
+   enListarMov(i1,j1,i2,j2,pieza){ //agrega al PGN el movimiento (falta caso de mov de 2 piezas iguales a la misma casilla)
 
-   enListarMov(i1,j1,i2,j2,pieza){
-      const getPieceLetter = (pieza) => {
+      const getPieceLetter = (pieza) => {//determina la letra para el PGN de la pieza, en caso de peon queda vacio
          let pieceLetter = '';
          let nomPieza = pieza.getNombrePieza();
          if (nomPieza === 'Knight') {
@@ -455,7 +436,7 @@ export class Tablero {
          }
          return pieceLetter;
       }
-      const nroAletra = (nro) => {
+      const nroAletra = (nro) => { //convierte el nro de columna en letra para el codigo PGN
          let letra = '';
          switch (nro){
             case 0: letra = 'a';break;
@@ -469,7 +450,7 @@ export class Tablero {
          }
          return letra;
       }
-      const come = (i1,j1,i2,j2,pieza) => {
+      const come = (i1,j1,i2,j2,pieza) => {// agrega la letra de peon(si es peon) y x en caso q coma
          let com = '';
          if (this.getPieza(i2,j2) != null) { //si hay pieza enemiga esta comiendo por lo tanto va la x  
             if (pieza.getNombrePieza() === 'Pank'){ //si es peon agrego letra de la columna de origen
@@ -489,7 +470,7 @@ export class Tablero {
          this.listOfMoves += ` ${this.numberMov}.`;
       }    
       this.listOfMoves += ` ${getPieceLetter(pieza)}${come(i1,j1,i2,j2,pieza)}${nroAletra(j2)}${i2+1}`;
-      UICtrl.actPgn(this.listOfMoves);
+      UICtrl.actPgn(this.listOfMoves); //actualiza el PGN de la interfaz
 
    }
    moverPieza(i1,j1,i2,j2,pieza){
@@ -559,7 +540,7 @@ export class Tablero {
             }
         }    
    }   
-   coronar(i,j,color){
+   coronar(i,j,color){//pide que pieza queremos coronar y la pone en el tablero
         let pieza = prompt();
         switch (pieza) {
             case 'Rook': 
@@ -582,19 +563,19 @@ export class Tablero {
 
         }
         UICtrl.set(i,j,color,pieza);
-        UICtrl.actPng(this.listOfMoves);
+        UICtrl.actPgn(this.listOfMoves);
   
    }
-   setPieza(i,j,valor){
+   setPieza(i,j,valor){//pone una pieza en el tablero
        this.table[i][j] = valor;
    }
-   setMove(i,j,valor){
+   setMove(i,j,valor){//pone una pieza en el move (variable auxiliar)
        this.move = [i,j,valor];
    }
-   changePlayer(){
+   changePlayer(){//cambia el turno del jugador
        this.activePlayer === 0 ? this.activePlayer = 1: this.activePlayer = 0;
    }
-   setFlagPeonPaso(i,j,bool){
+   setFlagPeonPaso(i,j,bool){//cambia la bandera del peon al paso
        this.flagPeonPaso[0] = i;
        this.flagPeonPaso[1] = j;
        this.flagPeonPaso[2] = bool;
