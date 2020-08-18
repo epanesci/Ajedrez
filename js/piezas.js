@@ -15,7 +15,6 @@ export class King extends Pieza {
    constructor(color){
       super(color);
       this.tipo = 'King';
-      // this.seMovio = false;
    }
    moveValid(i1,j1,i2,j2){
       const moveNormal = () => {
@@ -117,8 +116,6 @@ export class Pawn extends Pieza {
          }
          return valid;
       }
-
-      //Falta caso de comer al paso
       if (hayPiezaContraria){
          return comeAlCostado();
       }

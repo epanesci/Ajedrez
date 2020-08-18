@@ -3,7 +3,7 @@ import {Pieza,King,Queen,Rook,Bishop,Knight,Pawn} from './piezas.js';
 export class Tablero {
     //Constructors
 
-    constructor(){
+   constructor(){
        this.table = [[],[],[],[],[],[],[],[]];
        this.move = [0,0,null];
        this.activePlayer = 0;
@@ -16,8 +16,8 @@ export class Tablero {
              this.table[i].push(null);
           }
        }
-    }
-    cloneTable(tableOrig){
+   }
+   cloneTable(tableOrig){
       for (var i = 0; i < 8; i++) {
          for (var j = 0; j < 8; j++) {
             if (tableOrig.table[i][j] === null){
@@ -34,8 +34,8 @@ export class Tablero {
       this.moveKings = [tableOrig.moveKings[0],tableOrig.moveKings[1]];
       this.numberMov = tableOrig.numberMov;
       this.listOfMoves = tableOrig.listOfMoves;
-    }
-    initTable(){
+   }
+   initTable(){
        //Fila piezas Blancas
        this.table[0][0] = new Rook('White');
        this.table[0][1] = new Knight('White');
@@ -71,20 +71,20 @@ export class Tablero {
        this.table[7][5] = new Bishop('Black');
        this.table[7][6] = new Knight('Black');
        this.table[7][7] = new Rook('Black');
-    }
+   }
 
    //Geters
    
-    getPieza(i,j){
+   getPieza(i,j){
       return this.table[i][j];
-    }
-    getMove(){
+   }
+   getMove(){
       return this.move;
-    }
-    getFlagPeonPaso(){
+   }
+   getFlagPeonPaso(){
       return this.flagPeonPaso;
    }
-    hayPiezaContraria(i1,j1,i2,j2){
+   hayPiezaContraria(i1,j1,i2,j2){
       let hayPiezaCont = false;
       if (this.getPieza(i2,j2) !== null){
          if (this.getPieza(i1,j1).getColor() !== this.getPieza(i2,j2).getColor() ){
@@ -93,14 +93,14 @@ export class Tablero {
       }
       return hayPiezaCont
    }
-    mostrarTablero(){
+   mostrarTablero(){
        for (var i = 0; i <= 7; i++) {
           for (var j = 0; j <= 7; j++) {
              console.log(this.table[i][j]);
           }
        }
-    }
-    getRecorrido(i1,j1,i2,j2) {
+   }
+   getRecorrido(i1,j1,i2,j2) {
        let recorrido = [];
        //vertical
        if (i1===i2){
@@ -162,29 +162,29 @@ export class Tablero {
           }
        }
        return recorrido;
-    }
-    validarTurno(i1,j1,i2,j2) {
+   }
+   validarTurno(i1,j1,i2,j2) {
        if (this.activePlayer === 0){
           return (this.getPieza(i1,j1).getColor() === 'White');
        }
        else {
           return (this.getPieza(i1,j1).getColor() === 'Black')
        }
-    }
-    destinoValido (i1,j1,i2,j2) {// verificar si casilla destino hay pieza de mismo color
+   }
+   destinoValido (i1,j1,i2,j2) {// verificar si casilla destino hay pieza de mismo color
        let isValid = true;
        if (this.table[i2][j2] !== null) {
          isValid = (this.table[i1][j1].getColor() !== this.table[i2][j2].getColor())
        }
        return isValid;
       
-    }
-    movPiezaValido (i1,j1,i2,j2) {
+   }
+   movPiezaValido (i1,j1,i2,j2) {
        let hayPiezaContraria = this.hayPiezaContraria(i1,j1,i2,j2);
  
        return this.getPieza(i1,j1).moveValid(i1,j1,i2,j2,hayPiezaContraria,this.flagPeonPaso);
-    }
-    recorridoValido(i1,j1,i2,j2) {
+   }
+   recorridoValido(i1,j1,i2,j2) {
        let valid = true;
        if (this.getPieza(i1,j1).getNombrePieza() !== 'Knight'){
           let reco = this.getRecorrido(i1,j1,i2,j2);
@@ -195,8 +195,8 @@ export class Tablero {
           }
        }
        return valid;
-    }
-    recorridoValidoEnro(i1,j1,i2,j2) {
+   }
+   recorridoValidoEnro(i1,j1,i2,j2) {
        let valid = true;
        let fin = 0;
        switch (j2) {
@@ -214,8 +214,8 @@ export class Tablero {
           }
        }
        return valid;
-    }
-    torreMovida(i1,j1,i2,j2){
+   }
+   torreMovida(i1,j1,i2,j2){
        let moveRook = false;
        if (j2 === 6) {
           if (this.getPieza(i1,7).getNombrePieza() === 'Rook'){
@@ -238,14 +238,14 @@ export class Tablero {
           }
        }
        return moveRook;
-    }
-    moveValid(i1,j1,i2,j2) {
+   }
+   moveValid(i1,j1,i2,j2) {
        return this.validarTurno(i1,j1,i2,j2) && this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
-    }
-    hayAtaque(i1,j1,i2,j2){
+   }
+   hayAtaque(i1,j1,i2,j2){
       return this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
-    }
-    buscarAtaque(i2,j2,color){
+   }
+   buscarAtaque(i2,j2,color){
       let atack = false;
       for (let i = 0; i < 8; i++){
          for (let j = 0; j < 8; j++){
@@ -259,8 +259,8 @@ export class Tablero {
          }
       }
       return atack;
-    }
-    hayJaque(active){
+   }
+   hayJaque(active){
          let color = (active === 0) ? 'White' : 'Black';
          let jaque = false;
          //localizar rey del color
@@ -271,8 +271,8 @@ export class Tablero {
          jaque = this.buscarAtaque(kingOfColor[0],kingOfColor[1],color)
         
          return jaque;
-    }
-    searchKing(color){
+   }
+   searchKing(color){
       let positionKing;
       for (let i = 0; i < 8; i++){
          for (let j = 0; j < 8; j++){
@@ -288,7 +288,7 @@ export class Tablero {
 
    //Seters
     
-    enrocar(i1,j1,i2,j2) {
+   enrocar(i1,j1,i2,j2) {
        const esValidoEnroque = (i1,j1,i2,j2) => {
           let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
           let moveKing = true;
@@ -358,8 +358,8 @@ export class Tablero {
        }
        UICtrl.actPng(this.listOfMoves);
        return enroque;
-    }
-    enrocarAux(i1,j1,i2,j2) {
+   }
+   enrocarAux(i1,j1,i2,j2) {
       const esValidoEnroque = (i1,j1,i2,j2) => {
          let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
          let moveKing = true;
@@ -435,92 +435,64 @@ export class Tablero {
       let positionKing = this.searchKing(color);
       UICtrl.set(positionKing[0],positionKing[1],color,'KingAtack');
    }
-
    sacarRojoRey(actPlayer){
       let color = (actPlayer === 0) ? 'White' : 'Black';
       let positionKing = this.searchKing(color);
       UICtrl.set(positionKing[0],positionKing[1],color,'King');
    }
+
    enListarMov(i1,j1,i2,j2,pieza){
-      
-      let nomPieza = pieza.getNombrePieza();
-      let pieceLetter = '';
-      if (nomPieza === 'Knight') {
-         pieceLetter = 'N'
-      }
-      else {
-         if (nomPieza != 'Pank') {
-            pieceLetter = nomPieza[0];
+      const getPieceLetter = (pieza) => {
+         let pieceLetter = '';
+         let nomPieza = pieza.getNombrePieza();
+         if (nomPieza === 'Knight') {
+            pieceLetter = 'N'
          }
-      }
-      
-
-      let colMove = '';
-      switch (j2){
-         case 0: colMove = 'a';break;
-         case 1: colMove = 'b';break;
-         case 2: colMove = 'c';break;
-         case 3: colMove = 'd';break;
-         case 4: colMove = 'e';break;
-         case 5: colMove = 'f';break;
-         case 6: colMove = 'g';break;
-         case 7: colMove = 'h';break;
-      }
-
-
-
-
-
-
-      let eat = '';
-      if (this.getPieza(i2,j2) != null) {   
-         if (nomPieza === 'Pank'){
-            switch (j1){
-                  case 0: eat = 'a';break;
-                  case 1: eat = 'b';break;
-                  case 2: eat = 'c';break;
-                  case 3: eat = 'd';break;
-                  case 4: eat = 'e';break;
-                  case 5: eat = 'f';break;
-                  case 6: eat = 'g';break;
-                  case 7: eat = 'h';break;
-               }
+         else {
+            if (nomPieza != 'Pank') {
+               pieceLetter = nomPieza[0];
+            }
          }
-         eat += 'x';
+         return pieceLetter;
       }
-      else {
-         if (nomPieza === 'Pank' && j1 != j2){
-            switch (j1){
-                  case 0: eat = 'a';break;
-                  case 1: eat = 'b';break;
-                  case 2: eat = 'c';break;
-                  case 3: eat = 'd';break;
-                  case 4: eat = 'e';break;
-                  case 5: eat = 'f';break;
-                  case 6: eat = 'g';break;
-                  case 7: eat = 'h';break;
-               }
-            eat += 'x';
+      const nroAletra = (nro) => {
+         let letra = '';
+         switch (nro){
+            case 0: letra = 'a';break;
+            case 1: letra = 'b';break;
+            case 2: letra = 'c';break;
+            case 3: letra = 'd';break;
+            case 4: letra = 'e';break;
+            case 5: letra = 'f';break;
+            case 6: letra = 'g';break;
+            case 7: letra = 'h';break;
          }
+         return letra;
+      }
+      const come = (i1,j1,i2,j2,pieza) => {
+         let com = '';
+         if (this.getPieza(i2,j2) != null) { //si hay pieza enemiga esta comiendo por lo tanto va la x  
+            if (pieza.getNombrePieza() === 'Pank'){ //si es peon agrego letra de la columna de origen
+               com = nroAletra(j1);
+            }
+            com += 'x'
+         }
+         else { //caso particular del peon pasado
+            if (pieza.getNombrePieza() === 'Pank' && j1 != j2){
+               com = nroAletra(j1) + 'x';
+            }
+         }
+         return com;
       }
 
+      if (pieza.getColor() === 'White'){ //si es blanco pongo el nro de movimiento 
+         this.listOfMoves += ` ${this.numberMov}.`;
+      }    
+      this.listOfMoves += ` ${getPieceLetter(pieza)}${come(i1,j1,i2,j2,pieza)}${nroAletra(j2)}${i2+1}`;
+      UICtrl.actPgn(this.listOfMoves);
 
-
-
-
-
-
-      if (pieza.getColor() != 'Black'){
-         this.listOfMoves += ` ${this.numberMov}. ${pieceLetter}${eat}${colMove}${i2+1}`;
-      }
-      else {
-         this.listOfMoves += ` ${pieceLetter}${eat}${colMove}${i2+1}`;
-      }
-      
-      UICtrl.actPng(this.listOfMoves);
-    
-    }
-    moverPieza(i1,j1,i2,j2,pieza){
+   }
+   moverPieza(i1,j1,i2,j2,pieza){
        if (pieza.getNombrePieza() === 'King'){
           if (pieza.getColor() === 'White') {
              this.moveKings[0] = true;
@@ -545,8 +517,8 @@ export class Tablero {
                 this.coronar(i2,j2,pieza.getColor())
             }
        }    
-    }
-    moverPiezaAux(i1,j1,i2,j2,pieza){
+   }
+   moverPiezaAux(i1,j1,i2,j2,pieza){
       if (pieza.getNombrePieza() === 'King'){
          if (pieza.getColor() === 'White') {
             this.moveKings[0] = true;
@@ -571,7 +543,7 @@ export class Tablero {
            }
       }    
    }
-    specialMovePank(move,i,j,pieza){
+   specialMovePank(move,i,j,pieza){
         if (move[2].getNombrePieza() === 'Pank'){
             
             let color = this.getPieza(move[0],move[1]).getColor();
@@ -586,8 +558,8 @@ export class Tablero {
               
             }
         }    
-    }   
-    coronar(i,j,color){
+   }   
+   coronar(i,j,color){
         let pieza = prompt();
         switch (pieza) {
             case 'Rook': 
@@ -612,22 +584,20 @@ export class Tablero {
         UICtrl.set(i,j,color,pieza);
         UICtrl.actPng(this.listOfMoves);
   
-    }
-    setPieza(i,j,valor){
+   }
+   setPieza(i,j,valor){
        this.table[i][j] = valor;
-    }
-    setMove(i,j,valor){
+   }
+   setMove(i,j,valor){
        this.move = [i,j,valor];
-    }
-    
-    changePlayer(){
+   }
+   changePlayer(){
        this.activePlayer === 0 ? this.activePlayer = 1: this.activePlayer = 0;
-    }
-    setFlagPeonPaso(i,j,bool){
+   }
+   setFlagPeonPaso(i,j,bool){
        this.flagPeonPaso[0] = i;
        this.flagPeonPaso[1] = j;
        this.flagPeonPaso[2] = bool;
-    }
- 
- }
+   }
+} 
  
