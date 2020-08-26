@@ -37,7 +37,7 @@ const UIController = () => {// metodos controlan la interfaz
          document.getElementById(i.toString()+j.toString()).innerHTML = '';
       },
       actPgn: (listOfMoves) => { //actualiza la lista de movimiento en la interfaz
-         document.getElementById('containerPNG').innerHTML = listOfMoves;
+         document.getElementById('containerPGN').innerHTML = listOfMoves;
       }
    }
 }
@@ -99,5 +99,42 @@ const controller = () => {
    setupEventListener();
 
 }
+const initHTML = () => {
+   const pAndB = (fila,img,color1,color2) => {//pawns and blank 
+      let HTML = '';let colorCasilla = '';
+      for (let j = 0; j < 8; j++) {
+         colorCasilla = (j % 2 === 0) ? `casilla ${color1}`: `casilla ${color2}`;
+         HTML += `<div class="${colorCasilla}" id= ${fila}${j} >${img}</div>`;
+      }
+      return HTML;
+   } 
+   const crp1 = (i,color,color1,color2) => {
+      let crp = '';//color-row-piece
+      crp += `<div class="casilla ${color1}"id= ${i}0><img src="img/${color}-rook.png" alt="R"></div>`;
+      crp += `<div class="casilla ${color2}"id= ${i}1><img src="img/${color}-knigth.png" alt="N"></div>`;
+      crp += `<div class="casilla ${color1}"id= ${i}2><img src="img/${color}-bishop.png" alt="B"></div>`;
+      crp += `<div class="casilla ${color2}"id= ${i}3><img src="img/${color}-queen.png" alt="Q"></div>`;
+      crp += `<div class="casilla ${color1}"id= ${i}4><img src="img/${color}-king.png" alt="K"></div>`;
+      crp += `<div class="casilla ${color2}"id= ${i}5><img src="img/${color}-bishop.png" alt="B"></div>`;
+      crp += `<div class="casilla ${color1}"id= ${i}6><img src="img/${color}-knigth.png" alt="N"></div>`;
+      crp += `<div class="casilla ${color2}"id= ${i}7><img src="img/${color}-rook.png" alt="R"></div>`;
+      return crp;
+   }
+   
+   document.getElementById('black-row-piece').innerHTML = crp1(7,'black','white','black');
+   document.getElementById('black-pawn-row').innerHTML = pAndB(6, '<img src="img/black-pawn.png" alt="P">', 'black','white');
+   for (let i = 5; i >= 2; i--) {
+      let color1 = (i % 2 === 0) ? `black` : `white`;
+      let color2 = (i % 2 === 0) ? 'white' : `black`;
+      document.getElementById(`blank-row-${i}`).innerHTML = pAndB(i, '', color1, color2);
+   }
+   document.getElementById('white-pawn-row').innerHTML = pAndB(1, '<img src="img/white-pawn.png" alt="P">', 'white', 'black');
+   document.getElementById('white-row-piece').innerHTML = crp1(0, 'white','black','white');
+
+
+
+
+}
 export let UICtrl = UIController();
+initHTML();
 controller();

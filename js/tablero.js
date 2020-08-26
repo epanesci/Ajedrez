@@ -39,20 +39,14 @@ export class Tablero {
  
        //Fila Peones Blancos
  
-       for (var j = 0; j <= 7; j++) {
-          this.table[1][j] = new Pawn('White');
-       }
+       for (var j = 0; j <= 7; j++) { this.table[1][j] = new Pawn('White') }
  
        //Filas Casillas Vacias
        for (var i = 2; i <= 5; i++) {
-          for (var j = 0; j < 8; j++) {
-             this.table[i][j] = null;
-          }
+          for (var j = 0; j < 8; j++) { this.table[i][j] = null }
        }
        //Filas Peones Negros
-       for (var j = 0; j <= 7; j++) {
-          this.table[6][j] = new Pawn('Black');
-       }
+       for (var j = 0; j <= 7; j++) { this.table[6][j] = new Pawn('Black') }
        //Filas Piezas Negras
        this.table[7][0] = new Rook('Black');
        this.table[7][1] = new Knight('Black');
@@ -66,15 +60,9 @@ export class Tablero {
 
    //Geters
    
-   getPieza(i,j){//
-      return this.table[i][j];
-   }
-   getMove(){
-      return this.move;
-   }
-   getFlagPeonPaso(){
-      return this.flagPeonPaso;
-   }
+   getPieza(i,j){ return this.table[i][j] }
+   getMove(){ return this.move }
+   getFlagPeonPaso(){ return this.flagPeonPaso }
    hayPiezaContraria(i1,j1,i2,j2){
       let hayPiezaCont = false;
       if (this.getPieza(i2,j2) !== null){
@@ -148,12 +136,8 @@ export class Tablero {
        return recorrido;
    }
    validarTurno(i1,j1,i2,j2) {//valida el movimiento en funcion de si es o no su turno
-       if (this.activePlayer === 0){
-          return (this.getPieza(i1,j1).getColor() === 'White');
-       }
-       else {
-          return (this.getPieza(i1,j1).getColor() === 'Black')
-       }
+       if (this.activePlayer === 0){ return (this.getPieza(i1,j1).getColor() === 'White') }
+       else { return (this.getPieza(i1,j1).getColor() === 'Black') }
    }
    destinoValido (i1,j1,i2,j2) {// verificar que en la casilla destino no haya una pieza de mismo color
        let isValid = true;
@@ -161,21 +145,18 @@ export class Tablero {
          isValid = (this.table[i1][j1].getColor() !== this.table[i2][j2].getColor())
        }
        return isValid;
-      
    }
    movPiezaValido (i1,j1,i2,j2) {//verifica si el movimiento es valido para una pieza en particular
        let hayPiezaContraria = this.hayPiezaContraria(i1,j1,i2,j2);
- 
        return this.getPieza(i1,j1).moveValid(i1,j1,i2,j2,hayPiezaContraria,this.flagPeonPaso);
    }
-   recorridoValido(i1,j1,i2,j2) {//verifica que no haya piezas en el camino para ayudar a verificar si el mov es valido (excepto caballo)
+   recorridoValido(i1,j1,i2,j2) {
+      //verifica que no haya piezas en el camino para ayudar a verificar si el mov es valido (excepto caballo)
        let valid = true;
        if (this.getPieza(i1,j1).getNombrePieza() !== 'Knight'){
           let reco = this.getRecorrido(i1,j1,i2,j2);
           for (var i = 0; i < reco.length; i++) {
-             if (reco[i] !== null ){
-                valid = false; break;
-             }
+             if (reco[i] !== null ){ valid = false; break}
           }
        }
        return valid;
@@ -184,45 +165,16 @@ export class Tablero {
        let valid = true;
        let fin = 0;
        switch (j2) {
-          case 6:
-             fin = 7
-             break;
-          case 2:
-             fin = 0
-             break;
+          case 6: fin = 7; break;
+          case 2: fin = 0; break;
        }
        let reco = this.getRecorrido(i1,j1,i2,fin);
        for (var i = 0; i < reco.length; i++) {
-          if (reco[i] !== null ){
-             valid = false; break;
-          }
+          if (reco[i] !== null ){ valid = false; break }
        }
        return valid;
    }
-   torreMovida(i1,j1,i2,j2){//verifica si una torre fue o no movida (para evaluar si es posible un enroque)
-       let moveRook = false;
-       if (j2 === 6) {
-          if (this.getPieza(i1,7).getNombrePieza() === 'Rook'){
-             if (this.getPieza(i1,7).getMoveRook()){
-                moveRook = true;
-             }
-          }
-          else {
-             moveRook = true;
-          }
-       }
-       else if (j2 === 2) {
-          if (this.getPieza(i2,0).getNombrePieza() === 'Rook'){
-             if (this.getPieza(i2,0).getMoveRook()){
-                moveRook = true;
-             }
-          }
-          else {
-             moveRook = true;
-          }
-       }
-       return moveRook;
-   }
+   
    moveValid(i1,j1,i2,j2) {//verifica todos los criterios para determinar si un movimiento "normal" es valido 
        return this.validarTurno(i1,j1,i2,j2) && this.destinoValido(i1,j1,i2,j2) && this.movPiezaValido(i1,j1,i2,j2) && this.recorridoValido(i1,j1,i2,j2);
    }
@@ -272,9 +224,20 @@ export class Tablero {
 
    //Seters
     
-   enrocar(i1,j1,i2,j2) {//verifica si el movimiento es enroque y lo realiza caso afirmativo
-       const esValidoEnroque = (i1,j1,i2,j2) => {
-          let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
+   enrocar (i1,j1,i2,j2) {//verifica si el movimiento es enroque y lo realiza caso afirmativo
+      const torreMovida = (i1, j1, i2, j2) => {//verifica si una torre fue o no movida (para evaluar si es posible un enroque)
+
+         let esquina = 7; let moveRook = false;
+         if (j2 === 2) { esquina = 0 }
+
+         if (this.getPieza(i2, esquina).getNombrePieza() === 'Rook') {
+            if (this.getPieza(i2, esquina).getMoveRook()) { moveRook = true }
+         }
+         else { moveRook = true }
+         return moveRook;
+      } 
+      const esValidoEnroque = (i1,j1,i2,j2) => {
+          let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !torreMovida(i1,j1,i2,j2);
           let moveKing = true;
           if (i1 === 0){ moveKing = this.moveKings[0] }
           else if (i1 === 7) { moveKing = this.moveKings[1] }
@@ -344,8 +307,18 @@ export class Tablero {
        return enroque;
    }
    enrocarAux(i1,j1,i2,j2) {//es una funcion identica a enrocar pero no muestra los cambios en la interfaz
+      const torreMovida = (i1, j1, i2, j2) => {//verifica si una torre fue o no movida (para evaluar si es posible un enroque)
+         let esquina = 7; let moveRook = false;
+         if (j2 === 2) { esquina = 0 }
+
+         if (this.getPieza(i2, esquina).getNombrePieza() === 'Rook') {
+            if (this.getPieza(i2, esquina).getMoveRook()) { moveRook = true }
+         }
+         else { moveRook = true }
+         return moveRook;
+      } 
       const esValidoEnroque = (i1,j1,i2,j2) => {
-         let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !this.torreMovida(i1,j1,i2,j2);
+         let esValMove = this.validarTurno(i1,j1,i2,j2) && this.destinoValido (i1,j1,i2,j2) && this.recorridoValidoEnro(i1,j1,i2,j2) && !torreMovida(i1,j1,i2,j2);
          let moveKing = true;
          if (i1 === 0){ moveKing = this.moveKings[0] }
          else if (i1 === 7) { moveKing = this.moveKings[1] }

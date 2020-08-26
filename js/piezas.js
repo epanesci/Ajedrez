@@ -4,27 +4,19 @@ export class Pieza {
    constructor(color) {
       this.color = color; //Black, White
    }
-   getColor(){
-      return this.color;
-   }
-   getNombrePieza(){
-      return this.tipo;
-   }
+   getColor() { return this.color }
+   getNombrePieza() { return this.tipo }
 }
 export class King extends Pieza {
    constructor(color){
-      super(color);
-      this.tipo = 'King';
+      super(color); this.tipo = 'King';
    }
    moveValid(i1,j1,i2,j2){
       const moveNormal = () => {
-         const difis = Math.abs(i1-i2);
-         const difjs = Math.abs(j1-j2);
+         const difis = Math.abs(i1-i2); const difjs = Math.abs(j1-j2);
          let movNorm = false;
          if (!(difis === 0 && difjs === 0)){
-            if (difis <= 1 && difjs <=1){
-               movNorm = true;
-            }
+            if (difis <= 1 && difjs <=1){ movNorm = true }
          }
          return movNorm;
       }
@@ -33,8 +25,7 @@ export class King extends Pieza {
 }
 export class Queen extends Pieza {
    constructor(color){
-      super(color);
-      this.tipo = 'Queen'
+      super(color); this.tipo = 'Queen'
    }
    moveValid(i1,j1,i2,j2){
       // si es movimiento como la torre
@@ -50,29 +41,19 @@ export class Rook extends Pieza {
       this.tipo = 'Rook'
       this.move = false;
    }
-   moveValid(i1,j1,i2,j2){
-      return (i1 === i2) || (j1 === j2);
-   }
-   getMoveRook(){
-      return this.move;
-   }
-   setMoveRook(bool){
-      this.move = bool;
-   }
+   moveValid(i1,j1,i2,j2){ return (i1 === i2) || (j1 === j2) }
+   getMoveRook(){ return this.move }
+   setMoveRook(bool){ this.move = bool }
 }
 export class Bishop extends Pieza {
    constructor(color){
-      super(color);
-      this.tipo = 'Bishop'
+      super(color); this.tipo = 'Bishop'
    }
-   moveValid(i1,j1,i2,j2){
-      return (i1 + j1) === (i2 + j2) || (i1 - j1) === (i2 - j2);
-   }
+   moveValid(i1,j1,i2,j2){ return (i1 + j1) === (i2 + j2) || (i1 - j1) === (i2 - j2) }
 }
 export class Knight extends Pieza {
    constructor(color){
-      super(color);
-      this.tipo = 'Knight'
+      super(color); this.tipo = 'Knight'
    }
    moveValid(i1,j1,i2,j2) {
       let op1 = (Math.abs(i1-i2) === 1) && (Math.abs(j1-j2) === 2)
@@ -82,50 +63,25 @@ export class Knight extends Pieza {
 }
 export class Pawn extends Pieza {
    constructor(color){
-      super(color);
-      this.tipo = 'Pank'
+      super(color); this.tipo = 'Pank'
    }
    moveValid(i1,j1,i2,j2,hayPiezaContraria,peonPaso) {
       const avanzeDoble = () => {
-         let valid;
-         if (this.color === 'White') {
-            valid = (i1 === 1) && (i2 === 3) && (j1 === j2)
-         }
-         else {
-            valid = (i1 === 6) && (i2 === 4) && (j1 === j2)
-         }
-         return valid;
+         let esPasoDoble;
+         if (j1 === j2){esPasoDoble = (this.color === 'White') ? (i1 === 1) && (i2 === 3): (i1 === 6) && (i2 === 4)}
+         return esPasoDoble;
       }
       const avanzeSimple = () => {
-         let valid;
-         if (this.color === 'White') {
-            valid = (i1 === (i2 - 1)) && (j1 === j2)
-         }
-         else {
-            valid = (i1 === (i2 + 1)) && (j1 === j2)
-         }
-         return valid;
+         return (this.color === 'White') ? (i1 === (i2 - 1)) && (j1 === j2) : (i1 === (i2 + 1)) && (j1 === j2);
       }
       const comeAlCostado = () => {
-         let valid;
-         if (this.color === 'White') {
-            valid = (i1 === (i2 - 1)) && ((j1 === j2 + 1) || (j1 === (j2 - 1)))
-         }
-         else {
-            valid = (i1 === (i2 + 1)) && ((j1 === j2 + 1) || (j1 === (j2 - 1)))
-         }
-         return valid;
+         return (this.color === 'White') ? (i1 === (i2 - 1)) && ((j1 === j2 + 1) || (j1 === (j2 - 1)))
+         : (i1 === (i2 + 1)) && ((j1 === j2 + 1) || (j1 === (j2 - 1)));
       }
-      if (hayPiezaContraria){
-         return comeAlCostado();
-      }
-      else {
-         if (peonPaso[2] && j2 === peonPaso[1] && (i1 === 4 || i1 === 3)){
-             return comeAlCostado() || avanzeSimple() || avanzeDoble();
-         }
-         else {
-            return avanzeSimple() || avanzeDoble();
-         }
-      }
+      if (!hayPiezaContraria) {
+         if (peonPaso[2] && j2 === peonPaso[1] && (i1 === 4 || i1 === 3)) { return true }//come al paso
+         else { return avanzeSimple() || avanzeDoble() }
+      } 
+      else { return comeAlCostado() }
    }
 }
