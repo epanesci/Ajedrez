@@ -1,4 +1,3 @@
-import {Pieza,King,Queen,Rook,Bishop,Knight,Pawn} from './piezas.js';
 import {Tablero} from './tablero.js';
 const UIController = () => {// metodos controlan la interfaz
    return {
@@ -19,7 +18,6 @@ const UIController = () => {// metodos controlan la interfaz
                case 'King': aux = '<img src="img/white-king.png" alt="N">';break;
                case 'KingAtack': aux = '<img src="img/white-king-atack.png" alt="N">';break;
             }
-
          }
          else if (color === 'Black') {
             switch (p) {
